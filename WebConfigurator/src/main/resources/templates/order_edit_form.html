@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>[[${pageTitle}]]</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="text-center"><h2>[[${pageTitle}]]</h2></div>
+    <div th:if="${message}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+
+    <form th:action="@{/orders/save}" method="post" th:object="${order}"
+          style="max-width: 1000px; margin: 0 auto;">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{date}">
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Customer:</label>
+            <div class="col-sm-8">
+                <select th:field="*{customer}" class="form-control" id="customer_list" name="customer_list" required>
+                    <option th:each="customer : ${customers}"
+                            th:value="${customer.id}"
+                            th:text="${customer.firstName}+' '+${customer.lastName}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Status:</label>
+            <div class="col-sm-8">
+                <select class="form-control" name="status" th:field="*{status}" required>
+                    <option th:each="status : ${T(pl.wsb.programowaniejava.mariuszbielanczuk.WebConfigurator.order.OrderStatus).values()}"
+                            th:value="${status}" th:text="${status}"></option>
+                </select>
+            </div>
+        </div>
+        <table class="table table-striped" style="max-width: 1000px; margin: 0 auto;">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="item, i : ${items}">
+                <tr>
+                    <td>[[${i.index+1}]]</td>
+                    <td>[[${item.product.name}]]</td>
+                    <td>[[${item.product.price}]] PLN</td>
+                    <td>[[${item.quantity}]]</td>
+                    <td>[[${item.product.price} * ${item.quantity}]] PLN</td>
+                    <td>
+                        <a class="h4 mr-3" th:href="@{'/items/edit/' + ${item.id}}">Edit</a>
+                        <a class="h4" th:href="@{'/items/delete/' + ${item.id}}">Delete</a>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td></td><td></td><td></td><td></td>
+                <td style="font-weight:bold" th:if="${#lists.size(items)} > 0" th:text="${#aggregates.sum(items.![product.price * quantity])} + 'PLN'"></td>
+
+                <td>
+                    <a class="h4" th:href="@{'/orders/' + ${order.id} + '/items/new'}">Add New Item</a>
+                </td>
+            </tr>
+            </tfoot>
+
+        </table>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary m-2">Save</button>
+            <button type="button" class="btn btn-secondary m-2" onclick="cancelForm()">Back</button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function cancelForm() {
+        window.location = "[[@{/orders}]]";
+    }
+
+</script>
+
+
+</body>
+</html>

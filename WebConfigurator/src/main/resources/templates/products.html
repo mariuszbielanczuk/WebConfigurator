@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Products</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+</head>
+<body>
+<div class="container-fluid text-center">
+  <div><h2>Manage Products</h2></div>
+  <div>
+    <a class="h3 mr-3" th:href="@{./}">Home</a>
+    <a class="h3 p-10" th:href="@{/products/generate}">Generate Random Product</a>
+    <a class="h3" th:href="@{/products/new}">Add New Product</a>
+  </div>
+
+<div th:if="${message}" class="alert alert-success text-center">
+  [[${message}]]
+</div>
+
+  <div>
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Name</th>
+          <th>Width</th>
+          <th>Height</th>
+          <th>Price</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      <th:block th:each="product : ${listProducts}">
+        <tr>
+          <td>[[${product.id}]]</td>
+          <td>[[${product.type}]]</td>
+          <td>[[${product.name}]]</td>
+          <td>[[${product.width}]] mm</td>
+          <td>[[${product.height}]] mm</td>
+          <td align="right">[[${product.price}]] PLN</td>
+          <td>
+            <a class="h4 mr-3" th:href="@{'/products/edit/' + ${product.id}}">Edit</a>
+            <a class="h4" th:href="@{'/products/delete/' + ${product.id}}">Delete</a>
+          </td>
+        </tr>
+      </th:block>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Orders</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container-fluid text-center">
+    <div><h2>Manage Orders</h2></div>
+    <div>
+        <a class="h3 p-10" th:href="@{/}">Home</a>
+        <a class="h3 p-10" th:href="@{/orders/generate}">Generate Random Order</a>
+        <a class="h3 p-10" th:href="@{/orders/new}">Create New Order</a>
+    </div>
+
+    <div th:if="${message}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+    <nav class="navbar navbar-light bg-light">
+        <form class="form-inline" th:action="@{/orders/}" method="get" >
+            <div class="input-group">
+            <input class="form-control mr-sm-2" name="id" type="number" placeholder="Search Order by ID" aria-label="Search" required >
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </div>
+        </form>
+    </nav>
+    <div>
+        <table class="table table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Creation Date</th>
+                <th >Customer</th>
+                <th >Status</th>
+                <th>Total Price</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="order : ${listOrders}">
+                <tr>
+                    <td>[[${order.id}]]</td>
+                    <td>[[${order.date}]]</td>
+                    <td ><a class="h5 p-10" th:href="@{'/customers/' + ${order.customer.id}} + '/orders'">[[${order.customer.firstName}]] [[${order.customer.lastName}]]</a></td>
+                    <td>[[${order.status}]]</td>
+                    <td>
+                        <div th:if="${#lists.size(order.items)} > 0" th:text="${#aggregates.sum(order.items.![product.price * quantity])} + ' PLN'"></div>
+                    </td>
+                    <td>
+                        <a class="h4 mr-3" th:href="@{'/orders/edit/' + ${order.id}}">Edit</a>
+                        <a class="h4" th:href="@{'/orders/delete/' + ${order.id}}">Delete</a>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>[[${pageTitle}]]</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="text-center"><h2>[[${pageTitle}]]</h2></div>
+
+    <form th:action="@{/orders/save_new}" method="post" th:object="${order}"
+          style="max-width: 1000px; margin: 0 auto;">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{date}">
+        <input type="hidden" th:field="*{status}">
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Customer:</label>
+            <div class="col-sm-8">
+                <select th:field="*{customer.id}" class="form-control" id="customer_list" name="customer_list" required>
+                    <option value="">Select Customer</option>
+                    <option th:each="customer : ${customers}"
+                            th:value="${customer.id}"
+                            th:text="${customer.firstName}+' '+${customer.lastName}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary m-2">Add Items</button>
+            <button type="button" class="btn btn-secondary m-2" onclick="cancelForm()">Cancel</button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function cancelForm() {
+        window.location = "[[@{/orders}]]";
+    }
+
+</script>
+</body>
+</html>
